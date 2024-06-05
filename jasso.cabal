@@ -1,0 +1,41 @@
+cabal-version:      3.4
+name:               jasso
+version:            0.1.0.0
+synopsis:           Advanced identity management system from Piglet Engineering
+description:        Jasso is a modular system for identity management.  It currently supports:
+           Source   Sink
+  LDAP     yes      no
+  SAML2    no       yes
+  OIDC     no       yes
+  SCIM     no       no
+  Radius   no       no
+  Postgres no       -
+homepage:           https://dev.piglet.ch/jasso/jasso
+license:            AGPL-3.0-or-later
+license-file:       LICENSE
+author:             Pete Ryland
+maintainer:         pdr@piglet.ch
+copyright:          2021-2024 (c) Homebrew Holdings Pty Ltd
+category:           Network, Security, Web
+
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+-- tested-with:         GHC == 8.0.2 || == 8.2.2 || == 8.4.4 || == 8.6.5 || == 8.8.3
+
+source-repository head
+  type: git
+  location: ssh://dev.piglet.ch/jasso/jasso.git
+
+common warnings
+    ghc-options: -Wall
+
+executable jasso
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    base ^>=4.19.1.0
+    hs-source-dirs:   src
+    default-language: Haskell2010
