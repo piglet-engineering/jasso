@@ -1,0 +1,53 @@
+{-
+Jasso is Copyright (c) 2021-2024 Homebrew Holdings Pty Ltd.
+Contributors retain the copyright for their contributions.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+-}
+
+{-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}
+
+module UIIncludes(uijs, favico, robots) where
+
+import JassoState (JassoT)
+import Config (getConf, getFullPath)
+import ConfigTypes (varDir)
+
+import Control.Exception (catch)
+import Control.Monad.Extra (fromMaybeM)
+import Control.Monad.IO.Class (liftIO)
+import qualified Data.ByteString.Lazy as BSL
+import Servant (Handler, throwError, err404)
+
+readFileM :: FilePath -> JassoT Handler (Maybe BSL.ByteString)
+readFileM f = liftIO $ (Just <$> BSL.readFile f) `catch` (\(_ :: IOError) -> return Nothing)
+
+getFile :: FilePath -> JassoT Handler BSL.ByteString
+getFile f = do
+  varDir' <- varDir <$> getConf
+  fromMaybeM (throwError err404) $ readFileM (getFullPath varDir' f)
+
+uijs, favico, robots :: JassoT Handler BSL.ByteString
+
+favico = getFile "favicon.ico"
+robots = getFile "robots.txt"
+
+#ifdef JASSO_DEV
+
+uijs   = liftIO (BSL.readFile "frontend/ui.js")      -- Don't bundle ui.js in dev environemnt
+
+#else
+
+#include "../frontend/ui.h"
+
+#endif

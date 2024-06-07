@@ -1,7 +1,23 @@
 cabal-version:      3.4
+
+-- Jasso is Copyright (c) 2021-2024 Homebrew Holdings Pty Ltd.
+-- Contributors retain the copyright for their contributions.
+--
+-- This program is free software: you can redistribute it and/or modify it under
+-- the terms of the GNU Affero General Public License as published by the Free
+-- Software Foundation, either version 3 of the License, or (at your option) any
+-- later version.
+--
+-- This program is distributed in the hope that it will be useful, but WITHOUT ANY
+-- WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+-- PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+--
+-- You should have received a copy of the GNU Affero General Public License along
+-- with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 name:               jasso
-version:            0.1.0.0
-synopsis:           Advanced identity management system from Piglet Engineering
+version:            0.2.0.0
+synopsis:           Single sign-on system from Piglet Engineering
 description:        Jasso is a modular system for identity management.  It currently supports:
            Source   Sink
   LDAP     yes      no
@@ -18,24 +34,118 @@ maintainer:         pdr@piglet.ch
 copyright:          2021-2024 (c) Homebrew Holdings Pty Ltd
 category:           Network, Security, Web
 
-build-type:         Simple
-extra-doc-files:    CHANGELOG.md
--- extra-source-files:
-
--- tested-with:         GHC == 8.0.2 || == 8.2.2 || == 8.4.4 || == 8.6.5 || == 8.8.3
+build-type: Simple
+extra-doc-files: CHANGELOG.md
 
 source-repository head
   type: git
   location: ssh://dev.piglet.ch/jasso/jasso.git
 
-common warnings
-    ghc-options: -Wall
+flag jasso_dev
+  description: Don't compile in bundled files
+  default: False
+
+common common
+  hs-source-dirs: src
+  build-depends:
+    base,
+    aeson,
+    bytestring,
+    elm-bridge,
+    http-media,
+    lucid,
+    servant-elm,
+    servant-multipart,
+    servant-server,
+    text
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+    -Wno-orphans
+    -fPIC
+    -optL=-pie
+    -optL=-fpie
+    -optc-pie
+    -optc-fpie
+    --with-rtsopts=-N
+    -threaded
+  if flag(jasso_dev)
+    cpp-options:
+      -DJASSO_DEV
 
 executable jasso
-    import:           warnings
-    main-is:          Main.hs
-    -- other-modules:
-    -- other-extensions:
-    build-depends:    base ^>=4.19.1.0
-    hs-source-dirs:   src
-    default-language: Haskell2010
+  import: common
+  main-is: Main.hs
+  other-modules:
+    JassoState
+    Certs
+    Config
+    ConfigTypes
+    Ldap
+    LogTypes
+    Logger
+    Oidc
+    OidcTypes
+    Otp
+    Paths_jasso
+    Saml
+    Session
+    SinkCommon
+    StdoutLogger
+    UI
+    UICommon
+    UIIncludes
+    UITypes
+  build-depends:
+    base32,
+    base64-bytestring,
+    binary,
+    colour,
+    containers,
+    cookie,
+    crypton,
+    data-default,
+    diagrams-core,
+    diagrams-lib,
+    diagrams-svg,
+    directory,
+    extra,
+    filepath,
+    hsaml2,
+    http-types,
+    hxt,
+    include-file,
+    jose,
+    ldap-client,
+    lens,
+    lucid-svg,
+    memory,
+    network-uri,
+    pem,
+    qrcode-core,
+    random >=1.2,
+    servant,
+    servant-lucid,
+    split,
+    svg-builder,
+    template-haskell,
+    time,
+    transformers,
+    unix,
+    unordered-containers,
+    utf8-string,
+    uuid-types,
+    vector,
+    wai,
+    wai-cors,
+    warp,
+    crypton-x509,
+    crypton-x509-store,
+    yaml,
+    zlib
+
+executable mkelmapi
+  import: common
+  main-is: MkElmApi.hs
+  other-modules: UITypes
+  build-depends: servant-elm

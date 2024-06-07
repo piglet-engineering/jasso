@@ -1,0 +1,37 @@
+Jasso is a Single Sign-On System from Piglet Engineering
+
+It is a modular system and currently supports:
+            Source   Sink
+   LDAP     yes      no
+   SAML2    no       yes
+   OIDC     no       yes
+   SCIM     no       no
+   Radius   no       no
+   Postgres no       -
+
+Unless you are actively working on Jasso, it's recommended to install via an
+operating system package.  Packages are available for Debian and Ubuntu.
+
+To build, simply use `make`.
+
+Configuration is done entirely with flat files in the /var/lib/jasso
+directory.  Example configuration files are provided in
+/usr/share/doc/jasso/examples/.
+
+More information can be found at https://dev.piglet.ch/jasso/jasso
+
+
+Jasso is Copyright (c) 2021-2024 Homebrew Holdings Pty Ltd.
+Contributors retain the copyright for their contributions.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
