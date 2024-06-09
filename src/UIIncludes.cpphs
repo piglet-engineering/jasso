@@ -29,6 +29,18 @@ import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Lazy as BSL
 import Servant (Handler, throwError, err404)
 
+#ifdef JASSO_DEV
+
+uijs = liftIO (BSL.readFile "frontend/ui.js")      -- Don't bundle ui.js in dev environemnt
+
+#else
+
+import UIJS (uijs_)
+
+uijs = return uijs_
+
+#endif
+
 readFileM :: FilePath -> JassoT Handler (Maybe BSL.ByteString)
 readFileM f = liftIO $ (Just <$> BSL.readFile f) `catch` (\(_ :: IOError) -> return Nothing)
 
@@ -41,13 +53,3 @@ uijs, favico, robots :: JassoT Handler BSL.ByteString
 
 favico = getFile "favicon.ico"
 robots = getFile "robots.txt"
-
-#ifdef JASSO_DEV
-
-uijs   = liftIO (BSL.readFile "frontend/ui.js")      -- Don't bundle ui.js in dev environemnt
-
-#else
-
-#include "../frontend/ui.h"
-
-#endif

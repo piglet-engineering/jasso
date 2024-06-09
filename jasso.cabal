@@ -16,7 +16,7 @@ cabal-version:      3.4
 -- with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 name:               jasso
-version:            0.2.0.0
+version:            0.2.0.1
 synopsis:           Single sign-on system from Piglet Engineering
 description:        Jasso is a modular system for identity management.  It currently supports:
            Source   Sink
@@ -46,9 +46,9 @@ flag jasso_dev
   default: False
 
 common common
-  hs-source-dirs: src
+  hs-source-dirs: src, frontend
   build-depends:
-    base,
+    base < 6,
     aeson,
     bytestring,
     elm-bridge,
@@ -76,6 +76,7 @@ common common
 executable jasso
   import: common
   main-is: Main.hs
+  autogen-modules: Paths_jasso
   other-modules:
     JassoState
     Certs
@@ -95,6 +96,7 @@ executable jasso
     UI
     UICommon
     UIIncludes
+    UIJS
     UITypes
   build-depends:
     base32,
