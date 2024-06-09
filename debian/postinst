@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    configure)
+      if [ -z "`id -u jasso 2> /dev/null`" ]; then
+        adduser --system --home /var/lib/jasso --no-create-home --gecos "Piglet Jasso" --quiet jasso || true
+        mkdir -p /var/lib/jasso
+        chown jasso:nogroup /var/lib/jasso
+      fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument '$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

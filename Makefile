@@ -36,7 +36,7 @@ all: build
 build: jasso
 
 install: jasso
-	install -d -m755 $(DESTDIR)/usr/bin $(DESTDIR)/usr/share/doc/jasso
+	install -d -m755 $(DESTDIR)/usr/bin $(DESTDIR)/etc $(DESTDIR)/usr/share/doc/jasso
 	install -m644 dist*/build/*/*/jasso-*/x/jasso/build/jasso/jasso $(DESTDIR)/usr/bin
 	install -m644 doc/conf/jasso.conf $(DESTDIR)/etc/jasso.conf
 	install -m644 -D doc/conf/sp.conf $(DESTDIR)/var/lib/jasso/saml/mysp.conf.sample

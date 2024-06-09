@@ -1,0 +1,11 @@
+[Unit]
+Description=Jasso
+
+[Service]
+User=jasso
+ExecStart=/usr/bin/jasso
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

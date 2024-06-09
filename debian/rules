@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+debian/jasso.1: debian/jasso.md
+	@pandoc --standalone --from=markdown --to=man $< --output=$@
+
+override_dh_auto_build: debian/jasso.1
+	@dh_auto_build -- build HOME=/home/$$USER JASSO_DEV=
+
+.PHONY: override_dh_auto_build
