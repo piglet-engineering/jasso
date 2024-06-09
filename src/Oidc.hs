@@ -550,9 +550,9 @@ server jassoState privkey' symkey src rps lang'' = getOidcMeta "" :<|> oidchandl
       let nonce = nonce'
       let cc = decrypt symkey =<< data'
       let ci = decrypt symkey =<< client_id'
-      liftIO $ logItIO v Debug $ "OIDC: getLogin " <> show data' <> ", " <> show ci <> ", " <> show nonce' <> ", " <> show ru' <> ", " <> show uid' <> ", " <> show referer'
+      liftIO $ logItIO v Debug $ "OIDC: getLogin " <> show data' <> ", " <> show client_id' <> ", " <> show ci <> ", " <> show nonce' <> ", " <> show ru' <> ", " <> show uid' <> ", " <> show referer'
 
-      ru      <- jsonerror' "bad uid" ru' -- purposefully misleading error messages
+      ru      <- jsonerror' "bad uid" ru' -- purposefully misleading error messages (TODO: should debug log the real reason)
       ci'     <- jsonerror' "bad uid" ci
       uid''   <- jsonerror' "bad uid" uid'
       passwd  <- jsonerror' "bad uid" passwd'

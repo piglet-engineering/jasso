@@ -64,8 +64,8 @@ decrypt k s = do
   let (nonce, msg) = splitAt (blockSize k) $ BSC.unpack s'
   n <- makeIV $ BSC.pack nonce
   let s''' = BS.takeWhile (/= 0) $ ctrCombine k n (BSC.pack msg)
-  if BS.length s' `rem` blockSize k == 0 && BS.take 11 s''' == "jasso"
-    then eitherToMaybe $ decodeUtf8' $ BS.drop 11 s'''
+  if BS.length s' `rem` blockSize k == 0 && BS.take 5 s''' == "jasso"
+    then eitherToMaybe $ decodeUtf8' $ BS.drop 5 s'''
     else Nothing
 
 checkSession :: (MonadIO m, BlockCipher c, JassoSource s) => s -> JassoState -> c -> NominalDiffTime -> Maybe Text -> m (Maybe (User, UTCTime, UTCTime, UTCTime))
