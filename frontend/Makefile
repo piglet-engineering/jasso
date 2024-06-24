@@ -16,9 +16,9 @@
 all: UIJS.hs
 
 UIJS.hs: ui.js
-	@echo -n '{-# LANGUAGE OverloadedStrings #-}\n\nmodule UIJS(uijs_) where\n\nimport Data.ByteString.Lazy (ByteString)\n\nuijs_ :: ByteString\nuijs_ = "\\\n' > $@
+	@printf '{-# LANGUAGE OverloadedStrings #-}\n\nmodule UIJS(uijs_) where\n\nimport Data.ByteString.Lazy (ByteString)\n\nuijs_ :: ByteString\nuijs_ = "\\\n' > $@
 	@sed -E 's/\t/  /g; s/\\/\\\\/g; s/"/\\"/g; s/$$/\\/; s/^/\\/;' $< >> $@
-	@echo '\n\\"' >> $@
+	@printf '\n\\"\n' >> $@
 
 ui.js: UI.elm Api.elm Logo.elm elm.json
 ifdef JASSO_DEV
@@ -30,6 +30,6 @@ else
 endif
 
 clean:
-	@$(RM) -fr UIJS.hs *.js elm-stuff
+	@$(RM) -fr UIJS.hs ui.js elm.js elm-stuff
 
 .PHONY: all clean

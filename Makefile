@@ -16,8 +16,10 @@
 JASSO_DEV := 1
 ifeq ($(JASSO_DEV),1)
   CABALFLAGS := -v0 --enable-relocatable -fjasso_dev
+  FRONTENDJS := UIJS.hs
 else
   CABALFLAGS := -v1 --enable-relocatable
+  FRONTENDJS := ui.js
 endif
 GHCRTS := -N
 
@@ -53,7 +55,7 @@ distclean: dist-clean
 dist-clean: clean
 	@rm -rf -- .test.out
 
-jasso: jasso.cabal src/Main.hs src/JassoState.hs src/Certs.hs src/Config.hs src/ConfigTypes.hs src/Ldap.hs src/Logger.hs src/LogTypes.hs src/MkElmApi.hs src/Oidc.hs src/OidcTypes.hs src/Otp.hs src/Saml.hs src/Session.hs src/StdoutLogger.hs src/UI.hs src/UICommon.hs src/UIIncludes.cpphs src/UITypes.hs frontend/ui.js frontend/piglet.ico
+jasso: jasso.cabal src/Main.hs src/JassoState.hs src/Certs.hs src/Config.hs src/ConfigTypes.hs src/Ldap.hs src/Logger.hs src/LogTypes.hs src/MkElmApi.hs src/Oidc.hs src/OidcTypes.hs src/Otp.hs src/Saml.hs src/Session.hs src/StdoutLogger.hs src/UI.hs src/UICommon.hs src/UIIncludes.cpphs src/UITypes.hs frontend/$(FRONTENDJS) frontend/piglet.ico
 	cabal $(CABALFLAGS) build
 	@ln -nfs "$$(ls -1 dist*/build/*/*/jasso-*/x/jasso/build/jasso/jasso | tail -1)" jasso
 
@@ -61,7 +63,7 @@ frontend/Api.elm: src/MkElmApi.hs src/UITypes.hs
 	@cabal $(CABALFLAGS) build exe:mkelmapi
 	@cabal $(CABALFLAGS) exec mkelmapi
 
-frontend/ui.js: frontend/UI.elm frontend/Api.elm frontend/Logo.elm
+frontend/$(FRONTENDJS): frontend/UI.elm frontend/Api.elm frontend/Logo.elm
 	@+$(MAKE) -sC frontend JASSO_DEV="$(JASSO_DEV)"
 
 .PHONY: runtest test run all build install clean dist-clean distclean

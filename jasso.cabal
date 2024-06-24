@@ -45,6 +45,10 @@ flag jasso_dev
   description: Don't compile in bundled files
   default: False
 
+flag use_crypton
+  description: Use crypton library instead of cryptonite
+  default: False
+
 common common
   hs-source-dirs: src, frontend
   build-depends:
@@ -105,7 +109,6 @@ executable jasso
     colour,
     containers,
     cookie,
-    crypton,
     data-default,
     diagrams-core,
     diagrams-lib,
@@ -113,11 +116,9 @@ executable jasso
     directory,
     extra,
     filepath,
-    hsaml2,
     http-types,
     hxt,
     include-file,
-    jose,
     ldap-client,
     lens,
     lucid-svg,
@@ -140,11 +141,24 @@ executable jasso
     vector,
     wai,
     wai-cors,
-    warp,
-    crypton-x509,
-    crypton-x509-store,
     yaml,
-    zlib
+    zlib,
+  if flag(use_crypton)
+    build-depends:
+      crypton,
+      crypton-x509,
+      crypton-x509-store,
+      hsaml2 > 0.1.2,
+      jose >= 0.11,
+      warp >= 3.3.26,
+  else
+    build-depends:
+      cryptonite,
+      hsaml2 <= 0.1.2,
+      jose < 0.11,
+      warp < 3.3.26,
+      x509,
+      x509-store,
 
 executable mkelmapi
   import: common
